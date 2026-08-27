@@ -95,7 +95,7 @@ const Header = ({ variant = "default" }: HeaderProps) => {
 
   /* always transparent/overlay — matches the rest of the site */
   const isOverlay = variant !== "minimal";
-  const navTone = "text-white/75 hover:text-white";
+  const navTone = "text-white drop-shadow-md hover:text-white/80 font-medium";
 
   const handleLogout = async () => {
     setMobileOpen(false);
@@ -179,7 +179,7 @@ const Header = ({ variant = "default" }: HeaderProps) => {
         {/* Logo */}
         <Link to={isLoggedIn ? dashboardFor(user?.role ?? "") : "/"} className="group flex-shrink-0">
           <span className="font-display text-xl md:text-2xl uppercase tracking-[0.2em] text-white group-hover:text-white/80 transition-colors duration-300 flex items-center gap-3">
-            <img src="/image.png" alt="DomeLink Logo" className="h-10 md:h-12 w-auto object-contain drop-shadow-md" />
+            <img src="/image.png" alt="DomeLink Logo" className="h-10 md:h-12 w-auto object-contain drop-shadow-md mix-blend-multiply" />
             DomeLink
           </span>
         </Link>

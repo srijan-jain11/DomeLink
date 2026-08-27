@@ -4,8 +4,12 @@ import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import { Container } from "./Layout";
 import LoaderScene3D from "@/components/3d/LoaderScene3D";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { useAuth } from "@/context/useAuthContext";
 
 const Footer = () => {
+  const { user } = useAuth();
+  const isLoggedIn = Boolean(user);
+
   const activityData = [
     { week: "W1", visits: 280, matches: 34 },
     { week: "W2", visits: 420, matches: 52 },
@@ -14,7 +18,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="border-t border-border/70 py-20 md:py-28">
+    <footer className="border-t border-border/70 py-20 md:py-28 mt-auto">
       <Container>
         <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-10 pb-16 border-b border-border/70">
           <div className="space-y-6">
@@ -87,7 +91,7 @@ const Footer = () => {
           <div>
             <h4 className="text-caption text-foreground mb-6">Platform</h4>
             <ul className="space-y-3">
-              <FooterLink to="/find-architects">Explore Architects</FooterLink>
+              <FooterLink to="/explore">Explore Architects</FooterLink>
               <FooterLink to="/how-it-works">How it Works</FooterLink>
               <FooterLink to="/about">About</FooterLink>
               <FooterLink to="/contact">Contact</FooterLink>
@@ -97,9 +101,15 @@ const Footer = () => {
           <div>
             <h4 className="text-caption text-foreground mb-6">Account</h4>
             <ul className="space-y-3">
-              <FooterLink to="/login">Sign In</FooterLink>
-              <FooterLink to="/signup">Create Account</FooterLink>
-              <FooterLink to="/client/dashboard">Dashboard</FooterLink>
+              {!isLoggedIn && (
+                <>
+                  <FooterLink to="/login">Sign In</FooterLink>
+                  <FooterLink to="/signup">Create Account</FooterLink>
+                </>
+              )}
+              {isLoggedIn && (
+                <FooterLink to="/client/dashboard">Dashboard</FooterLink>
+              )}
             </ul>
           </div>
         </div>

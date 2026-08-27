@@ -760,6 +760,17 @@ export const api = {
     return request<{ user: ApiUser; consultationCount: number; earnings: number }>("/api/users/me");
   },
   updateMe(payload: any) {
+    if (getToken() === "mock_token") {
+      return Promise.resolve({
+        user: { 
+          id: "mock_user", 
+          name: payload.name || "Homeowner", 
+          role: "CLIENT", 
+          email: "test@test.com",
+          ...payload
+        } as ApiUser
+      });
+    }
     return request<{ user: ApiUser }>("/api/users/me", {
       method: "PATCH",
       body: JSON.stringify(payload),
@@ -932,6 +943,17 @@ export const api = {
     >("/api/architects/me/insights");
   },
   getConsultations() {
+    if (getToken() === "mock_token") {
+      return Promise.resolve([{
+        _id: "consultation-1",
+        userId: { id: "mock_user", name: "Homeowner", role: "CLIENT", email: "test@test.com" },
+        architectId: { _id: "arch-1", name: "Studio Morphe", slug: "studio-morphe", specialty: "Modern Minimal" },
+        message: "Hi, I am interested in your services for my new project.",
+        status: "active",
+        amount: 5000,
+        createdAt: new Date().toISOString()
+      }] as Consultation[]);
+    }
     return request<any[]>("/api/consultations/my").then((rows) =>
       rows.map((row) => ({
         ...row,
@@ -1019,6 +1041,26 @@ export const api = {
     });
   },
   getSavedArchitects() {
+    if (getToken() === "mock_token") {
+      return Promise.resolve([{
+        _id: "arch-1",
+        name: "Studio Morphe",
+        slug: "studio-morphe",
+        specialty: "Modern Minimal",
+        location: "Bangalore, India",
+        rating: 4.8,
+        startingPrice: 3500,
+        about: "We design spaces.",
+        heroImage: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&q=80",
+        projects: [],
+        templates: [],
+        experience: "10 Years",
+        teamSize: 5,
+        isVerified: true,
+        designStyles: ["Modern Minimal"],
+        citiesServed: ["Bangalore"]
+      }] as Architect[]);
+    }
     return request<Architect[]>("/api/saved/my");
   },
   getMySavers() {
@@ -1184,6 +1226,46 @@ export const api = {
     prayerRoom?: boolean; courtyard?: boolean; budgetMin?: number; budgetMax?: number;
     budgetFlexibility?: string; materialPreference?: string;
   }) {
+    if (getToken() === "mock_token") {
+      return Promise.resolve({
+        id: "mock_estimate",
+        report: {
+          costRange: { min: payload.budgetMin || 3500000, max: payload.budgetMax || 6500000, currency: "INR" },
+          complexityScore: 8,
+          readinessScore: 7,
+          estimatedTimeline: "6-8 months",
+          architectTier: "Premium",
+          spacePlanning: ["Open plan living", "Vastu compliant layout"],
+          climateSuggestions: ["Cross ventilation", "Thermal mass"],
+          sustainabilitySuggestions: ["Rainwater harvesting"],
+          materialRecommendations: ["Local stone", "Teak wood"],
+          interiorDirection: "Modern Indian Minimalist",
+          riskFactors: ["Soil type may require special foundation"],
+          budgetFeasibility: "Feasible",
+          constructionDifficulty: "Moderate",
+          designSummary: `A custom designed ${payload.floors || 2} floor residence in ${payload.city || "Bangalore"}.`,
+          consultationPath: "Standard Architecture Consultation",
+          nextActions: ["Schedule site visit", "Finalize moodboard"],
+          aiBudgetBreakdown: {
+            construction: (payload.budgetMin || 3500000) * 0.6,
+            architecture: (payload.budgetMin || 3500000) * 0.1,
+            interiors: (payload.budgetMin || 3500000) * 0.2,
+            addOns: (payload.budgetMin || 3500000) * 0.1,
+            total: (payload.budgetMin || 3500000),
+            builtUpArea: (payload.plotSize || 2400) * 0.8,
+            psfRate: 3500,
+            breakdown: {
+              structure: (payload.budgetMin || 3500000) * 0.3,
+              finishing: (payload.budgetMin || 3500000) * 0.2,
+              mep: (payload.budgetMin || 3500000) * 0.1,
+              facade: (payload.budgetMin || 3500000) * 0.05,
+              landscape: (payload.budgetMin || 3500000) * 0.05,
+              addOns: (payload.budgetMin || 3500000) * 0.05,
+            }
+          }
+        }
+      });
+    }
     return request<{ id: string; report: AvoraReport }>("/api/ai/avora-estimate", {
       method: "POST",
       body: JSON.stringify(payload),

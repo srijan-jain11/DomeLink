@@ -12,7 +12,6 @@ const ProfileSettings = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   
-  // Local state for the form
   const [formData, setFormData] = useState({
     name: "",
     location: "",
@@ -20,7 +19,10 @@ const ProfileSettings = () => {
     startingPrice: "",
     experience: "",
     teamSize: "",
-    about: ""
+    about: "",
+    city: "",
+    projectType: "",
+    preferredStyles: ""
   });
 
   // Pre-fill the form with existing user data
@@ -33,7 +35,10 @@ const ProfileSettings = () => {
         startingPrice: user.startingPrice?.toString() || "",
         experience: user.experience || "",
         teamSize: user.teamSize?.toString() || "",
-        about: user.about || ""
+        about: user.about || "",
+        city: user.city || "",
+        projectType: user.projectType || "",
+        preferredStyles: Array.isArray(user.preferredStyles) ? user.preferredStyles.join(", ") : ""
       });
     }
   }, [user]);
@@ -45,6 +50,7 @@ const ProfileSettings = () => {
       // 2. Parse numbers so Prisma doesn't crash
       startingPrice: data.startingPrice ? parseInt(data.startingPrice) : null,
       teamSize: data.teamSize ? parseInt(data.teamSize) : null,
+      preferredStyles: data.preferredStyles ? data.preferredStyles.split(",").map((s: string) => s.trim()).filter(Boolean) : []
     }), 
     onSuccess: () => {
       toast.success("Profile updated successfully!");
@@ -157,6 +163,52 @@ const ProfileSettings = () => {
                       onChange={handleChange}
                       rows={4}
                       className="dome-input min-h-[120px] resize-none"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Homeowner Specific Fields */}
+              {(user.role === "CLIENT" || user.role === "homeowner") && (
+                <div className="space-y-4 pt-6 border-t border-border/40">
+                  <h3 className="text-display-sm">Project Preferences</h3>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-caption text-muted-foreground block mb-2">City</label>
+                      <input
+                        name="city"
+                        value={formData.city}
+                        onChange={handleChange}
+                        placeholder="e.g. Bangalore"
+                        className="dome-input"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-caption text-muted-foreground block mb-2">Project Type</label>
+                      <select
+                        name="projectType"
+                        value={formData.projectType}
+                        onChange={handleChange as any}
+                        className="dome-input"
+                      >
+                        <option value="">Select Project Type</option>
+                        <option value="Residential">Residential</option>
+                        <option value="Commercial">Commercial</option>
+                        <option value="Interior">Interior</option>
+                        <option value="Renovation">Renovation</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-caption text-muted-foreground block mb-2">Preferred Styles (comma separated)</label>
+                    <input
+                      name="preferredStyles"
+                      value={formData.preferredStyles}
+                      onChange={handleChange}
+                      placeholder="e.g. Modern Minimal, Tropical"
+                      className="dome-input"
                     />
                   </div>
                 </div>

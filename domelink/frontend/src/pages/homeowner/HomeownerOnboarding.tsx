@@ -475,14 +475,24 @@ export default function HomeownerOnboarding() {
 
                     {/* Navigation */}
                     <div className="mt-8 flex items-center justify-between gap-3">
-                      <button
-                        type="button"
-                        onClick={back}
-                        disabled={stepIndex === 0 || loading || complete}
-                        className="dome-button-outline px-5 py-3 disabled:opacity-40"
-                      >
-                        Back
-                      </button>
+                      {stepIndex === 0 ? (
+                        <button
+                          type="button"
+                          onClick={() => navigate("/")}
+                          className="dome-button-outline px-5 py-3"
+                        >
+                          Exit
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={back}
+                          disabled={loading || complete}
+                          className="dome-button-outline px-5 py-3 disabled:opacity-40"
+                        >
+                          Back
+                        </button>
+                      )}
 
                       {activeStep.id !== "complete" ? (
                         <button

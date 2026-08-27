@@ -29,9 +29,12 @@ const LoaderScene = () => {
       {shouldUseFallback ? (
         <SpinnerFallback />
       ) : (
-        <Suspense fallback={<SpinnerFallback />}>
-          <LoaderScene3D />
-        </Suspense>
+        <div className="flex flex-col items-center gap-3">
+          <Suspense fallback={<SpinnerFallback />}>
+            <LoaderScene3D />
+          </Suspense>
+          <span className="text-sm tracking-wide text-foreground/80 animate-pulse">Loading DomeLink...</span>
+        </div>
       )}
     </div>
   );

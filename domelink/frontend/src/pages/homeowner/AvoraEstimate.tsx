@@ -302,7 +302,7 @@ export default function AvoraEstimate() {
   const canContinue = () => {
     if (activeStep.id === "basics") return !!form.city && !!form.plotSize && !!form.floors;
     if (activeStep.id === "style") return !!form.architectureStyle;
-    if (activeStep.id === "budget") return !!form.budgetMin && !!form.budgetMax;
+    if (activeStep.id === "budget") return !!form.budgetMin && !!form.budgetMax && Number(form.budgetMin) > 0 && Number(form.budgetMax) >= Number(form.budgetMin);
     return true;
   };
 
@@ -473,7 +473,7 @@ export default function AvoraEstimate() {
                       <p className="text-caption text-muted-foreground mb-1">Avora Spatial Match</p>
                       <h2 className="text-display-sm">Architects matched to your profile</h2>
                     </div>
-                    <Link to={`/find-architects?city=${encodeURIComponent(form.city)}&style=${encodeURIComponent(form.architectureStyle)}`}
+                    <Link to={`/explore?city=${encodeURIComponent(form.city)}&style=${encodeURIComponent(form.architectureStyle)}`}
                       className="text-caption text-muted-foreground hover:text-foreground transition-colors link-underline">
                       View all
                     </Link>
@@ -489,7 +489,7 @@ export default function AvoraEstimate() {
                         initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.4 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
                         whileHover={{ y: -2 }}
-                        onClick={() => navigate("/find-architects")}>
+                        onClick={() => navigate("/explore")}>
                         <img src={arch.img} alt={arch.name} className="w-12 h-12 rounded-full object-cover flex-shrink-0" />
                         <div className="min-w-0">
                           <p className="text-body-sm font-medium truncate">{arch.name}</p>
@@ -500,7 +500,7 @@ export default function AvoraEstimate() {
                     ))}
                   </div>
                   <p className="text-caption text-muted-foreground mt-3 text-center">
-                    Showing representative matches. <Link to="/find-architects" className="text-foreground link-underline">Browse all verified architects</Link> for live profiles.
+                    Showing representative matches. <Link to="/explore" className="text-foreground link-underline">Browse all verified architects</Link> for live profiles.
                   </p>
                 </div>
               </Reveal>
@@ -519,7 +519,7 @@ export default function AvoraEstimate() {
                     <div className="flex flex-col gap-3 flex-shrink-0">
                       <motion.button className="dome-button px-8 py-3"
                         whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                        onClick={() => navigate("/find-architects")}>
+                        onClick={() => navigate("/explore")}>
                         Find Matched Architects
                       </motion.button>
                       <motion.button className="dome-button-outline px-8 py-3"
@@ -700,10 +700,17 @@ export default function AvoraEstimate() {
                     </AnimatePresence>
 
                     <div className="mt-8 flex items-center justify-between gap-3">
-                      <button type="button" onClick={() => setStepIndex(i => Math.max(i - 1, 0))}
-                        disabled={stepIndex === 0 || loading} className="dome-button-outline px-5 py-3 disabled:opacity-40">
-                        Back
-                      </button>
+                      {stepIndex === 0 ? (
+                        <button type="button" onClick={() => navigate("/")}
+                          className="dome-button-outline px-5 py-3">
+                          Exit
+                        </button>
+                      ) : (
+                        <button type="button" onClick={() => setStepIndex(i => Math.max(i - 1, 0))}
+                          disabled={loading} className="dome-button-outline px-5 py-3 disabled:opacity-40">
+                          Back
+                        </button>
+                      )}
                       {isLast ? (
                         <motion.button type="button" onClick={handleSubmit}
                           disabled={!canContinue() || loading}

@@ -152,9 +152,16 @@ const HomeownerDashboard = () => {
             {/* Project summary cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
               {personalSummary.map(item => (
-                <div key={item.label} className="dome-card p-6">
+                <div key={item.label} className="dome-card p-6 relative group">
+                  <Link to="/profile/settings" className="absolute top-4 right-4 text-xs font-medium text-foreground opacity-0 group-hover:opacity-100 transition-opacity">Edit</Link>
                   <div className="text-caption text-muted-foreground">{item.label}</div>
-                  <div className="text-xl font-medium mt-2">{item.value}</div>
+                  <div className="text-xl font-medium mt-2">
+                    {item.value === "Not set" || item.value === "Not set yet" ? (
+                      <Link to="/profile/settings" className="text-muted-foreground hover:text-foreground underline underline-offset-4 transition-colors">
+                        {item.value}
+                      </Link>
+                    ) : item.value}
+                  </div>
                   <p className="text-body-sm text-muted-foreground mt-2">{item.note}</p>
                 </div>
               ))}

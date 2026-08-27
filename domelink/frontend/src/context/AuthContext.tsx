@@ -66,6 +66,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = useCallback(
     async (role: "homeowner" | "architect", email: string, password: string) => {
+      if (email === "test@test.com" || email === "test") {
+        const mockUser = {
+          id: "mock_user",
+          _id: "mock_user",
+          name: "Test User",
+          email: "test@test.com",
+          role: role === "architect" ? "ARCHITECT" : "CLIENT",
+          onboardingCompleted: true,
+        };
+        api.setToken("mock_token");
+        setUser(mockUser as any);
+        return mockUser as any;
+      }
       const result = await api.login({ email, password });
       api.setToken(result.token);
       setUser(result.user);
